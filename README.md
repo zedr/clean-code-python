@@ -574,3 +574,45 @@ print(new_name)  # ['Ryan', 'McDermott']
 
 **[⬆ back to top](#table-of-contents)**
 
+### Don't write to global functions
+
+Polluting globals is a bad practice in many languages because you could clash 
+with another library, and the user of your library would be none-the-wiser 
+until they get an exception in production. Let's think about an example: what 
+if you wanted to hace a configuration array? You could write a global function like 
+`config()`, but it could clash with another library that tried to do the same thing.
+
+**Bad:**
+
+```python
+def config() -> dict:
+    return {
+        'foo': 'bar',
+    }
+```
+
+**Good:**
+
+```python
+from typing import Any, Dict, Optional
+
+class Configuration
+    def __init__(self, configuration: Dict[str, Any]):
+        self._configuration = configuration
+
+    def get(self, key: str) -> Optional[str]:
+        return self._configuration.get(key)
+```
+
+Load configuration and create instance of `Configuration` class:
+
+```python
+configuration = Configuration(
+    {
+        'foo': 'bar',
+    }
+)
+```
+And now, you may use this instance of `Configuration` in your application.
+
+**[⬆ back to top](#table-of-contents)**
