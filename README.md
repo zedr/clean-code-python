@@ -431,3 +431,65 @@ message.send()
 ```
 
 **[⬆ back to top](#table-of-contents)**
+
+### Functions should only be one level of abstraction
+
+When you have more than one level of abstraction, your function is usually doing too 
+much. Splitting up functions leads to reusability and easier testing.
+
+**Bad:**
+
+```python
+def parse_better_js_alternative(code: str) -> None:
+    regexes = [
+        # ...
+    ]
+
+    statements = regexes.split()
+    tokens = []
+    for regex in regexes:
+        for statement in statements:
+            # ...
+
+    ast = []
+    for token in tokens:
+        # Lex.
+
+    for node in ast:
+        # Parse.
+```
+
+**Good:**
+
+```python
+def parse_better_js_alternative(code: str) -> None:
+    tokens = tokenize(code)
+    syntax_tree = parse(tokens)
+
+    for node in syntax_tree:
+        # Parse.
+
+
+def tokenize(code: str) -> list:
+    REGEXES = [
+        # ...
+    ]
+
+    statements = code.split()
+    tokens = []
+    for regex in REGEXES:
+        for statement in statements:
+           # Append the statement to tokens.
+
+    return tokens
+
+
+def parse(tokens: list) -> list:
+    syntax_tree = []
+    for token in tokens:
+        # Append the parsed token to the syntax tree.
+
+    return syntax_tree
+```
+
+**[⬆ back to top](#table-of-contents)**
