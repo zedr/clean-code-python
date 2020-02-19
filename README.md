@@ -275,8 +275,8 @@ def create_menu(title, body, button_text, cancellable):
 ```python
 class Menu:
     def __init__(self, config: dict):
-        title = config["title"]
-        body = config["body"]
+        self.title = config["title"]
+        self.body = config["body"]
         # ...
 
 menu = Menu(
