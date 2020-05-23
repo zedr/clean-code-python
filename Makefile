@@ -15,7 +15,7 @@ ${ENV}:
 	@${IN_ENV} pip install -U pip
 
 ${SITE_PACKAGES}/pytest.py:
-	@${IN_ENV} pip install pytest
+	@${IN_ENV} pip install -U pytest
 
 deps: ${SITE_PACKAGES}/pytest.py
 
