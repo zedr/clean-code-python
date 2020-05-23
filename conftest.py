@@ -55,7 +55,3 @@ class ReadmeItem(pytest.Item):
 
     def reportinfo(self):
         return self.fspath, 0, "usecase: {}".format(self.name)
-
-
-class ReadmeException(Exception):
-    """ custom exception for error reporting. """
