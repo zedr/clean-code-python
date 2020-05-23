@@ -17,8 +17,10 @@ ${ENV}:
 ${SITE_PACKAGES}/pytest.py:
 	@${IN_ENV} pip install pytest
 
+deps: ${SITE_PACKAGES}/pytest.py
+
 tests: ${ENV} ${SITE_PACKAGES}/pytest.py
 	@${IN_ENV} pytest
 
 clean:
-	@rm -rf ${ENV} .env dist .pytest_cache
+	@rm -rf ${ENV} .env .pytest_cache
