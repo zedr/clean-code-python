@@ -1,6 +1,7 @@
 # clean-code-python
 
 [![Build Status](https://travis-ci.com/zedr/clean-code-python.svg?branch=master)](https://travis-ci.com/zedr/clean-code-python)
+[![](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/download/releases/3.7.5/)
 
 ## Table of Contents
   1. [Introduction](#introduction)
