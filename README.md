@@ -1,5 +1,7 @@
 # clean-code-python
 
+[![Build Status](https://travis-ci.com/zedr/clean-code-python.svg?branch=master)](https://travis-ci.com/zedr/clean-code-python)
+
 ## Table of Contents
   1. [Introduction](#introduction)
   2. [Variables](#variables)
