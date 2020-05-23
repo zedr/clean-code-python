@@ -1,7 +1,7 @@
 # clean-code-python
 
 [![Build Status](https://travis-ci.com/zedr/clean-code-python.svg?branch=master)](https://travis-ci.com/zedr/clean-code-python)
-[![](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/download/releases/3.7.5/)
+[![](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/download/releases/3.8.3/)
 
 ## Table of Contents
   1. [Introduction](#introduction)
@@ -366,6 +366,36 @@ create_menu(
 )
 ```
 
+**Even fancier, Python3.8+ only**
+```python
+class MenuConfig(typing.TypedDict):
+    """A configuration for the Menu.
+
+    Attributes:
+        title: The title of the Menu.
+        body: The body of the Menu.
+        button_text: The text for the button label.
+        cancellable: Can it be cancelled?
+    """
+    title: str
+    body: str
+    button_text: str
+    cancellable: bool = False
+
+
+def create_menu(config: MenuConfig):
+    title = config["title"]
+    # ...
+
+
+create_menu(
+    {
+        'title' : "My delicious menu",
+        'body' : "A description of the various items on the menu",
+        'button_text' : "Order now!"
+    }
+)
+```
 **[⬆ back to top](#table-of-contents)**
 
 ### Functions should do one thing
