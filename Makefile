@@ -15,7 +15,7 @@ ${ENV}:
 	@${IN_ENV} pip install -U pip
 
 ${SITE_PACKAGES}/pytest.py:
-	@${IN_ENV} pip install -U pytest
+	@${IN_ENV} pip install -r requirements.txt
 
 deps: ${SITE_PACKAGES}/pytest.py
 

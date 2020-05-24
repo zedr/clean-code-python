@@ -36,11 +36,17 @@ Targets Python3.7+
 
 **Bad:**
 ```python
+import datetime
+
+
 ymdstr = datetime.date.today().strftime("%y-%m-%d")
 ```
 
 **Good**:
 ```python
+import datetime
+
+
 current_date: str = datetime.date.today().strftime("%y-%m-%d")
 ```
 **[⬆ back to top](#table-of-contents)**
@@ -68,6 +74,9 @@ Python is (also) an object oriented programming language. If it makes sense, pac
 of the entity in your code, as instance attributes, property methods, or methods:
 
 ```python
+from typing import Union, Dict, Text
+
+
 class Record:
     pass
 
@@ -76,10 +85,10 @@ class User:
     info : str
 
     @property
-    def data(self) -> dict:
+    def data(self) -> Dict[Text, Text]:
         return {}
 
-    def get_record(self) -> typing.Union[Record, None]:
+    def get_record(self) -> Union[Record, None]:
         return Record()
         
 ```
@@ -94,12 +103,18 @@ Make your names searchable.
 
 **Bad:**
 ```python
-# What the heck is 86400 for?
+import time
+
+
+# What is the number 86400 for again?
 time.sleep(86400)
 ```
 
 **Good**:
 ```python
+import time
+
+
 # Declare them in the global namespace for the module.
 SECONDS_IN_A_DAY = 60 * 60 * 24
 time.sleep(SECONDS_IN_A_DAY)
@@ -114,9 +129,10 @@ import re
 
 address = "One Infinite Loop, Cupertino 95014"
 city_zip_code_regex = r"^[^,\\]+[,\\\s]+(.+?)\s*(\d{5})?$"
-matches = re.match(city_zip_code_regex, address)
 
-print(f"{matches[1]}: {matches[2]}")
+matches = re.match(city_zip_code_regex, address)
+if matches:
+    print(f"{matches[1]}: {matches[2]}")
 ```
 
 **Not bad**:
@@ -131,9 +147,9 @@ address = "One Infinite Loop, Cupertino 95014"
 city_zip_code_regex = r"^[^,\\]+[,\\\s]+(.+?)\s*(\d{5})?$"
 matches = re.match(city_zip_code_regex, address)
 
-city, zip_code = matches.groups()
-
-print(f"{city}: {zip_code}")
+if matches:
+    city, zip_code = matches.groups()
+    print(f"{city}: {zip_code}")
 ```
 
 **Good**:
@@ -145,9 +161,10 @@ import re
 
 address = "One Infinite Loop, Cupertino 95014"
 city_zip_code_regex = r"^[^,\\]+[,\\\s]+(?P<city>.+?)\s*(?P<zip_code>\d{5})?$"
-matches = re.match(city_zip_code_regex, address)
 
-print(f"{matches['city']}, {matches['zip_code']}")
+matches = re.match(city_zip_code_regex, address)
+if matches:
+    print(f"{matches['city']}, {matches['zip_code']}")
 ```
 **[⬆ back to top](#table-of-contents)**
 
@@ -212,6 +229,9 @@ class Car:
 Why write:
 
 ```python
+import hashlib
+
+
 def create_micro_brewery(name):
     name = "Hipster Brew Co." if name is None else name
     slug = hashlib.sha1(name.encode()).hexdigest()
@@ -224,7 +244,11 @@ you are expecting a string as the argument.
 **Good**:
 
 ```python
-def create_micro_brewery(name: str = "Hipster Brew Co."):
+from typing import Text
+import hashlib
+
+
+def create_micro_brewery(name: Text = "Hipster Brew Co."):
     slug = hashlib.sha1(name.encode()).hexdigest()
     # etc.
 ```
@@ -267,6 +291,9 @@ menu = Menu(
 
 **Also good**
 ```python
+from typing import Text
+
+
 class MenuConfig:
     """A configuration for the Menu.
 
@@ -276,13 +303,13 @@ class MenuConfig:
         button_text: The text for the button label.
         cancellable: Can it be cancelled?
     """
-    title: str
-    body: str
-    button_text: str
+    title: Text
+    body: Text
+    button_text: Text
     cancellable: bool = False
 
 
-def create_menu(config: MenuConfig):
+def create_menu(config: MenuConfig) -> None:
     title = config.title
     body = config.body
     # ...
@@ -334,6 +361,7 @@ create_menu(
 
 **Even fancier**
 ```python
+from typing import Text
 from dataclasses import astuple, dataclass
 
 
@@ -347,9 +375,9 @@ class MenuConfig:
         button_text: The text for the button label.
         cancellable: Can it be cancelled?
     """
-    title: str
-    body: str
-    button_text: str
+    title: Text
+    body: Text
+    button_text: Text
     cancellable: bool = False
 
 def create_menu(config: MenuConfig):
@@ -368,7 +396,10 @@ create_menu(
 
 **Even fancier, Python3.8+ only**
 ```python
-class MenuConfig(typing.TypedDict):
+from typing import TypedDict, Text
+
+
+class MenuConfig(TypedDict):
     """A configuration for the Menu.
 
     Attributes:
@@ -377,10 +408,10 @@ class MenuConfig(typing.TypedDict):
         button_text: The text for the button label.
         cancellable: Can it be cancelled?
     """
-    title: str
-    body: str
-    button_text: str
-    cancellable: bool = False
+    title: Text
+    body: Text
+    button_text: Text
+    cancellable: bool
 
 
 def create_menu(config: MenuConfig):
@@ -389,11 +420,13 @@ def create_menu(config: MenuConfig):
 
 
 create_menu(
-    {
-        'title' : "My delicious menu",
-        'body' : "A description of the various items on the menu",
-        'button_text' : "Order now!"
-    }
+    # You need to supply all the parameters
+    MenuConfig(
+        title="My delicious menu", 
+        body="A description of the various items on the menu",
+        button_text="Order now!",
+        cancellable=True
+    )
 )
 ```
 **[⬆ back to top](#table-of-contents)**
@@ -407,6 +440,9 @@ of many developers.
 
 **Bad:**
 ```python
+from typing import List
+
+
 class Client:
     active: bool
 
@@ -415,7 +451,7 @@ def email(client: Client) -> None:
     pass
 
 
-def email_clients(clients: typing.List[Client]) -> None:
+def email_clients(clients: List[Client]) -> None:
     """Filter active clients and send them an email.
     """
     for client in clients:
@@ -425,6 +461,9 @@ def email_clients(clients: typing.List[Client]) -> None:
 
 **Good**:
 ```python
+from typing import List
+
+
 class Client:
     active: bool
 
@@ -432,13 +471,14 @@ class Client:
 def email(client: Client) -> None:
     pass
 
-def get_active_clients(clients: typing.List[Client]) -> typing.List[Client]:
+
+def get_active_clients(clients: List[Client]) -> List[Client]:
     """Filter active clients.
     """
     return [client for client in clients if client.active]
 
 
-def email_clients(clients: typing.List[Client]) -> None:
+def email_clients(clients: List[Client]) -> None:
     """Send an email to a given list of clients.
     """
     for client in clients:
@@ -449,6 +489,9 @@ Do you see an opportunity for using generators now?
 
 **Even better**
 ```python
+from typing import Generator, Iterator
+
+
 class Client:
     active: bool
 
@@ -457,15 +500,12 @@ def email(client: Client):
     pass
 
 
-def active_clients(
-        clients: typing.List[Client]
-    ) -> typing.Generator[Client, None, None]:
-    """Only active clients.
-    """
+def active_clients(clients: Iterator[Client]) -> Generator[Client, None, None]:
+    """Only active clients"""
     return (client for client in clients if client.active)
 
 
-def email_client(clients: typing.Iterator[Client]) -> None:
+def email_client(clients: Iterator[Client]) -> None:
     """Send an email to a given list of clients.
     """
     for client in active_clients(clients):
@@ -510,6 +550,8 @@ much. Splitting up functions leads to reusability and easier testing.
 **Bad:**
 
 ```python
+# type: ignore
+
 def parse_better_js_alternative(code: str) -> None:
     regexes = [
         # ...
@@ -532,22 +574,25 @@ def parse_better_js_alternative(code: str) -> None:
 **Good:**
 
 ```python
-REGEXES = (
+from typing import Tuple, List, Text, Dict
+
+
+REGEXES: Tuple = (
    # ...
 )
 
 
-def parse_better_js_alternative(code: str) -> None:
-    tokens = tokenize(code)
-    syntax_tree = parse(tokens)
+def parse_better_js_alternative(code: Text) -> None:
+    tokens: List = tokenize(code)
+    syntax_tree: List = parse(tokens)
 
     for node in syntax_tree:
         pass
 
 
-def tokenize(code: str) -> list:
+def tokenize(code: Text) -> List:
     statements = code.split()
-    tokens = []
+    tokens: List[Dict] = []
     for regex in REGEXES:
         for statement in statements:
             pass
@@ -555,8 +600,8 @@ def tokenize(code: str) -> list:
     return tokens
 
 
-def parse(tokens: list) -> list:
-    syntax_tree = []
+def parse(tokens: List) -> List:
+    syntax_tree: List[Dict] = []
     for token in tokens:
         pass
 
@@ -574,11 +619,12 @@ paths based on a boolean.
 **Bad:**
 
 ```python
+from typing import Text
 from tempfile import gettempdir
 from pathlib import Path
 
 
-def create_file(name: str, temp: bool) -> None:
+def create_file(name: Text, temp: bool) -> None:
     if temp:
         (Path(gettempdir()) / name).touch()
     else:
@@ -588,13 +634,16 @@ def create_file(name: str, temp: bool) -> None:
 **Good:**
 
 ```python
+from typing import Text
 from tempfile import gettempdir
 from pathlib import Path
 
-def create_file(name: str) -> None:
+
+def create_file(name: Text) -> None:
     Path(name).touch()
 
-def create_temp_file(name: str) -> None:
+
+def create_temp_file(name: Text) -> None:
     (Path(gettempdir()) / name).touch()
 ```
 
@@ -621,21 +670,25 @@ If you can do this, you will be happier than the vast majority of other programm
 **Bad:**
 
 ```python
+# type: ignore
+
 # This is a module-level name.
 # It"s good practice to define these as immutable values, such as a string.
 # However...
-name = "Ryan McDermott"
+fullname = "Ryan McDermott"
 
 def split_into_first_and_last_name() -> None:
     # The use of the global keyword here is changing the meaning of the
     # the following line. This function is now mutating the module-level
     # state and introducing a side-effect!
-    global name
-    name = name.split()
+    global fullname
+    fullname = fullname.split()
 
 split_into_first_and_last_name()
 
-print(name)  # ["Ryan", "McDermott"]
+# MyPy will spot the problem, complaining about 'Incompatible types in 
+# assignment: (expression has type "List[str]", variable has type "str")'
+print(fullname)  # ["Ryan", "McDermott"]
 
 # OK. It worked the first time, but what will happen if we call the
 # function again?
@@ -643,32 +696,37 @@ print(name)  # ["Ryan", "McDermott"]
 
 **Good:**
 ```python
-def split_into_first_and_last_name(name: str) -> list:
+from typing import List, AnyStr
+
+
+def split_into_first_and_last_name(name: AnyStr) -> List[AnyStr]:
     return name.split()
 
-name = "Ryan McDermott"
-new_name = split_into_first_and_last_name(name)
+fullname = "Ryan McDermott"
+name, surname = split_into_first_and_last_name(fullname)
 
-print(name)  # "Ryan McDermott"
-print(new_name)  # ["Ryan", "McDermott"]
+print(name, surname)  # => Ryan McDermott
 ```
 
 **Also good**
 ```python
+from typing import Text
 from dataclasses import dataclass
+
 
 @dataclass
 class Person:
-    name: str
+    name: Text
 
     @property
     def name_as_first_and_last(self) -> list:
         return self.name.split() 
 
+
 # The reason why we create instances of classes is to manage state!
 person = Person("Ryan McDermott")
-print(person.name)  # "Ryan McDermott"
-print(person.name_as_first_and_last)  # ["Ryan", "McDermott"]
+print(person.name)  # => "Ryan McDermott"
+print(person.name_as_first_and_last)  # => ["Ryan", "McDermott"]
 ```
 
 **[⬆ back to top](#table-of-contents)**
