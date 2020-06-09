@@ -481,7 +481,7 @@ def get_active_clients(clients: List[Client]) -> List[Client]:
 def email_clients(clients: List[Client]) -> None:
     """Send an email to a given list of clients.
     """
-    for client in clients:
+    for client in get_active_clients(clients):
         email(client)
 ```
 
