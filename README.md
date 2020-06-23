@@ -1,19 +1,48 @@
 # clean-code-python
 
-## Table of Contents
-  1. [Introduction](#introduction)
-  2. [Variables](#variables)
-  3. [Functions](#functions)
-  4. [Objects and Data Structures](#objects-and-data-structures)
-  5. [Classes](#classes)
-     1. [S: Single Responsibility Principle (SRP)](#single-responsibility-principle-srp)
-     2. [O: Open/Closed Principle (OCP)](#openclosed-principle-ocp)
-     3. [L: Liskov Substitution Principle (LSP)](#liskov-substitution-principle-lsp)
-     4. [I: Interface Segregation Principle (ISP)](#interface-segregation-principle-isp)
-     5. [D: Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip)
-  6. [Don't repeat yourself (DRY)](#dont-repeat-yourself-dry)
+# Table of Contents
+
+- [clean-code-python](#clean-code-python)
+- [Table of Contents](#table-of-contents)
+    - [Introduction](#introduction)
+        - [Why do we need clean code?](#why-do-we-need-clean-code)
+    - [**Variables**](#variables)
+        - [Use meaningful and pronounceable variable names](#use-meaningful-and-pronounceable-variable-names)
+        - [Use the same vocabulary for the same type of variable](#use-the-same-vocabulary-for-the-same-type-of-variable)
+        - [Use searchable names](#use-searchable-names)
+        - [Avoid encodings](#avoid-encodings)
+        - [Use explanatory variables](#use-explanatory-variables)
+        - [Avoid Mental Mapping](#avoid-mental-mapping)
+        - [Don't add unneeded context](#dont-add-unneeded-context)
+        - [Pick one word per concept](#pick-one-word-per-concept)
+        - [Use default arguments instead of short circuiting or conditionals](#use-default-arguments-instead-of-short-circuiting-or-conditionals)
+    - [**Functions**](#functions)
+        - [Function arguments (2 or fewer ideally)](#function-arguments-2-or-fewer-ideally)
+        - [Functions should do one thing](#functions-should-do-one-thing)
+        - [Function names should say what they do](#function-names-should-say-what-they-do)
+        - [Functions should only be one level of abstraction](#functions-should-only-be-one-level-of-abstraction)
+        - [Don't use flags as function parameters](#dont-use-flags-as-function-parameters)
+        - [Avoid side effects](#avoid-side-effects)
+        - [Avoiding side effects part 2](#avoiding-side-effects-part-2)
+    - [**Objects and Data Structures**](#objects-and-data-structures)
+    - [**Classes**](#classes)
+        - [**Single Responsibility Principle (SRP)**](#single-responsibility-principle-srp)
+        - [**Open/Closed Principle (OCP)**](#openclosed-principle-ocp)
+        - [**Liskov Substitution Principle (LSP)**](#liskov-substitution-principle-lsp)
+        - [**Interface Segregation Principle (ISP)**](#interface-segregation-principle-isp)
+        - [**Dependency Inversion Principle (DIP)**](#dependency-inversion-principle-dip)
+    - [**Don't repeat yourself (DRY)**](#dont-repeat-yourself-dry)
 
 ## Introduction
+
+### Why do we need clean code?
+"The ratio of time spent on reading vs writing code is well over 10:1. We are constantly reading old code
+as part of the effort to write new code. Making code easier to read makes it easier to write" [ref bob martin]
+
+The boy scout rule:
+- if we all checked in code a little cleaner than when we checked it out, the code can simply not rot.
+- Can you imagine working on a project where the code got better as time went on? :mindblown:
+
 
 Software engineering principles, from Robert C. Martin's book
 [*Clean Code*](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882),
@@ -29,17 +58,73 @@ Inspired from [clean-code-javascript](https://github.com/ryanmcdermott/clean-cod
 Targets Python3.7+
 
 ## **Variables**
+- Use intention revealing names and don't be afraid to change them if you find better names
+- Why does it exist? How is it used? 
+- If a name requires a comment it does not reveal it's intention
+
+Bad:
+```python
+d: int  # elapsed time in days
+```
+Good:
+```python
+elapsed_time_in_days: int
+```
+
+Be explicit with your variable names
+
+```python
+def get_them(input_list):
+    output = []
+    for x in intput_list:
+        if x == 4
+            output.append(x)
+        
+    return output
+```
+
+What sorts of things are implied by this code?
+1. What kinds of things are in `input_list`?
+2. What is the significance of the value 4?
+3. How would I use the list being returned?
+
+
+better:
+```python
+FLAGGED = 4
+
+def get_flagged_cell(cells):
+    flagged_cells = []
+    for cell in cells:
+        if cell == FLAGGED:
+            flagged_cells.append(x)
+        
+    return flagged_cells
+```
+
+best: (sidenote about list comprehensions)
+```python
+def get_flagged_cell(cells):
+    return [cell for cell in cells if cell == FLAGGED]
+```
+
+Notice how much more *EXPLICIT* the code is in the improved examples
+
 ### Use meaningful and pronounceable variable names
 
 **Bad:**
 ```python
 ymdstr = datetime.date.today().strftime("%y-%m-%d")
 ```
+How do I pronounce this? "yem dee string"? Fun or not, we're tolerating poor naming here. New developers
+will have to have this variable explained to them. Use proper english terms even if the term is a little
+longer. Let autocomplete save the keystrokes for you.
 
 **Good**:
 ```python
 current_date: str = datetime.date.today().strftime("%y-%m-%d")
 ```
+
 **[⬆ back to top](#table-of-contents)**
 
 ### Use the same vocabulary for the same type of variable
@@ -76,6 +161,10 @@ class User:
         # ...
 ```
 
+You want to avoid adding noise to your variable names. Noise words add "meaningless" distinction. In the above example
+`info` and `data` are indistinct noise words. How do programmers know which function to call?
+Distinguish names so the reader knows the difference
+
 **[⬆ back to top](#table-of-contents)**
 
 ### Use searchable names
@@ -97,7 +186,28 @@ SECONDS_IN_A_DAY = 60 * 60 * 24
 
 time.sleep(SECONDS_IN_A_DAY)
 ```
+
+Single letter variable names should almost always be avoided. Personally, I like the length of the name 
+to correspond to the size of its scope. If a variable or constant is used in multiple places/bodies of code
+it is imperative that you give it a search friendly name.
+
 **[⬆ back to top](#table-of-contents)**
+
+### Avoid encodings
+In modern python we have a rich type annotation system and we can use type checkers
+to enforce these types, if you want to add them. What you want to avoid is adding type
+information to the variable name. Given that python is also a dynamic language this may
+also lead to disinformation.
+
+Bad
+```python
+car_dict = {"make": "tesla"}
+```
+
+Better:
+```python
+car = {"make": "tesla"}
+```
 
 ### Use explanatory variables
 **Bad:**
@@ -165,8 +275,10 @@ for location in locations:
 
 ### Don't add unneeded context
 
-If your class/object name tells you something, don't repeat that in your
-variable name.
+This avoids adding disinformation. Do not refer to a a grouping of accounts
+as an `accounts_list` unless your stakeholders say it's a list. Try to use
+vocabulary from the business domain if your class/object name tells you something, 
+don't repeat that in your variable name.
 
 **Bad:**
 
@@ -185,6 +297,13 @@ class Car:
     model: str
     color: str
 ```
+
+### Pick one word per concept
+Pick one word for an abstract concept and stick with it. For example, it's confusing to have
+`fetch`, `retrieve`, `get` as equivalent methods on different classes. How do you remember
+which name goes on each class? 
+
+_"A consistent lexicon is a great boon to the programmers who must use your code"_
 
 **[⬆ back to top](#table-of-contents)**
 
