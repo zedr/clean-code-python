@@ -27,7 +27,7 @@ Not every principle herein has to be strictly followed, and even fewer will be u
 agreed upon. These are guidelines and nothing more, but they are ones codified over many 
 years of collective experience by the authors of *Clean Code*.
 
-Inspired from [clean-code-javascript](https://github.com/ryanmcdermott/clean-code-javascript)
+Inspired from [clean-code-javascript](https://github.com/ryanmcdermott/clean-code-ruby)
 
 Targets Python3.7+
 
@@ -728,6 +728,59 @@ person = Person("Ryan McDermott")
 print(person.name)  # => "Ryan McDermott"
 print(person.name_as_first_and_last)  # => ["Ryan", "McDermott"]
 ```
+
+### Avoiding side effects part 2
+In Python, everything is an object and everything is passed by value, 
+but these values are references to objects. In the case of objects and lists, if your method makes a change
+in a shopping cart array, for example, by adding an item to purchase,
+then any other method that uses that `cart` array will be affected by this
+addition. That may be great, however it can be bad too. Let's imagine a bad
+situation:
+
+The user clicks the "Purchase", button which calls a `purchase` method that
+spawns a network request and sends the `cart` array to the server. Because
+of a bad network connection, the `purchase` method has to keep retrying the
+request. Now, what if in the meantime the user accidentally clicks "Add to Cart"
+button on an item they don't actually want before the network request begins?
+If that happens and the network request begins, then that purchase method
+will send the accidentally added item because it has a reference to a shopping
+cart array that the `add_item_to_cart` method modified by adding an unwanted
+item.
+
+A great solution would be for the `add_item_to_cart` to always clone the `cart`,
+edit it, and return the clone. This ensures that no other methods that are
+holding onto a reference of the shopping cart will be affected by any changes.
+
+Two caveats to mention to this approach:
+  1. There might be cases where you actually want to modify the input object,
+but when you adopt this programming practice you will find that those cases
+are pretty rare. Most things can be refactored to have no side effects!
+
+  2. Python comes built in the with a [copy](https://docs.python.org/3/library/copy.html) 
+  module which allows for copying and deep copying objects.
+
+  3. Cloning big objects can be expensive in terms of performance. So if you find that you're doing it
+  often, you may want to consider implementing the `__copy__` and `__deepcopy__` methods for improved
+  performance. More info [here](https://pymotw.com/3/copy/)
+
+**Bad:**
+```python
+from datetime import datetime
+
+def add_item_to_cart(cart: list, item):
+  cart.append({"item": item, "time": datetime.now()})
+```
+
+**Good:**
+```python
+from datetime import datetime
+
+def add_item_to_cart(cart, item):
+    cart_copy = cart[:]
+    cart_copy.append({"item": item, "time": datetime.now()})
+    return cart_copy
+```
+
 
 **[⬆ back to top](#table-of-contents)**
 
