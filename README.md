@@ -18,20 +18,71 @@
 
 ## Introduction
 
-Software engineering principles, from Robert C. Martin"s book
-[*Clean Code*](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882),
-adapted for Python. This is not a style guide. It"s a guide to producing
-readable, reusable, and refactorable software in Python.
+### Why do we need clean code?
+"The ratio of time spent on reading vs writing code is well over 10:1. We are constantly reading old code
+as part of the effort to write new code. Making code easier to read makes it easier to write" [ref bob martin]
 
-Not every principle herein has to be strictly followed, and even fewer will be universally 
-agreed upon. These are guidelines and nothing more, but they are ones codified over many 
-years of collective experience by the authors of *Clean Code*.
+The boy scout rule:
+- if we all checked in code a little cleaner than when we checked it out, the code can simply not rot.
+- Can you imagine working on a project where the code got better as time went on? :mindblown:
 
 Inspired from [clean-code-javascript](https://github.com/ryanmcdermott/clean-code-ruby)
 
 Targets Python3.7+
 
 ## **Variables**
+- Use intention revealing names and don't be afraid to change them if you find better names
+- Why does it exist? How is it used? 
+- If a name requires a comment it does not reveal it's intention
+
+Bad:
+```python
+d: int  # elapsed time in days
+```
+Good:
+```python
+elapsed_time_in_days: int
+```
+
+Be explicit with your variable names
+
+```python
+def get_them(input_list):
+    output = []
+    for x in intput_list:
+        if x == 4
+            output.append(x)
+        
+    return output
+```
+
+What sorts of things are implied by this code?
+1. What kinds of things are in `input_list`?
+2. What is the significance of the value 4?
+3. How would I use the list being returned?
+
+
+better:
+```python
+FLAGGED = 4
+
+def get_flagged_cell(cells):
+    flagged_cells = []
+    for cell in cells:
+        if cell == FLAGGED:
+            flagged_cells.append(x)
+        
+    return flagged_cells
+```
+
+best: (sidenote about list comprehensions)
+```python
+def get_flagged_cell(cells):
+    return [cell for cell in cells if cell == FLAGGED]
+```
+
+Notice how much more *EXPLICIT* the code is in the improved examples
+
 ### Use meaningful and pronounceable variable names
 
 **Bad:**
@@ -41,6 +92,9 @@ import datetime
 
 ymdstr = datetime.date.today().strftime("%y-%m-%d")
 ```
+How do I pronounce this? "yem dee string"? Fun or not, we're tolerating poor naming here. New developers
+will have to have this variable explained to them. Use proper english terms even if the term is a little
+longer. Let autocomplete save the keystrokes for you.
 
 **Good**:
 ```python
@@ -49,6 +103,7 @@ import datetime
 
 current_date: str = datetime.date.today().strftime("%y-%m-%d")
 ```
+
 **[⬆ back to top](#table-of-contents)**
 
 ### Use the same vocabulary for the same type of variable
@@ -93,6 +148,10 @@ class User:
         
 ```
 
+You want to avoid adding noise to your variable names. Noise words add "meaningless" distinction. In the above example
+`info` and `data` are indistinct noise words. How do programmers know which function to call?
+Distinguish names so the reader knows the difference
+
 **[⬆ back to top](#table-of-contents)**
 
 ### Use searchable names
@@ -119,7 +178,28 @@ import time
 SECONDS_IN_A_DAY = 60 * 60 * 24
 time.sleep(SECONDS_IN_A_DAY)
 ```
+
+Single letter variable names should almost always be avoided. Personally, I like the length of the name 
+to correspond to the size of its scope. If a variable or constant is used in multiple places/bodies of code
+it is imperative that you give it a search friendly name.
+
 **[⬆ back to top](#table-of-contents)**
+
+### Avoid encodings
+In modern python we have a rich type annotation system and we can use type checkers
+to enforce these types, if you want to add them. What you want to avoid is adding type
+information to the variable name. Given that python is also a dynamic language this may
+also lead to disinformation.
+
+Bad
+```python
+car_dict = {"make": "tesla"}
+```
+
+Better:
+```python
+car = {"make": "tesla"}
+```
 
 ### Use explanatory variables
 **Bad:**
@@ -198,9 +278,10 @@ for location in locations:
 
 
 ### Don"t add unneeded context
-
-If your class/object name tells you something, don"t repeat that in your
-variable name.
+This avoids adding disinformation. Do not refer to a a grouping of accounts
+as an `accounts_list` unless your stakeholders say it's a list. Try to use
+vocabulary from the business domain if your class/object name tells you something, 
+don't repeat that in your variable name.
 
 **Bad:**
 
@@ -219,6 +300,13 @@ class Car:
     model: str
     color: str
 ```
+
+### Pick one word per concept
+Pick one word for an abstract concept and stick with it. For example, it's confusing to have
+`fetch`, `retrieve`, `get` as equivalent methods on different classes. How do you remember
+which name goes on each class? 
+
+_"A consistent lexicon is a great boon to the programmers who must use your code"_
 
 **[⬆ back to top](#table-of-contents)**
 
