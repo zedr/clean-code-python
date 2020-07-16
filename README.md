@@ -15,6 +15,7 @@
      4. [I: Interface Segregation Principle (ISP)](#interface-segregation-principle-isp)
      5. [D: Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip)
   6. [Don"t repeat yourself (DRY)](#dont-repeat-yourself-dry)
+  7. [Mixins Classes](#mixins)
 
 ## Introduction
 
@@ -895,4 +896,146 @@ def add_item_to_cart(cart, item):
 *Coming soon*
 
 **[⬆ back to top](#table-of-contents)**
+
+# **Dependency Inversion Principle (DIP)**
+The DIP amounts to the following: 
+- *Depend upon abstractions. Do not depend upon concrete classes.*
+
+The object of this principle is to help decouple software and render high-level modules independant from low-level module implementation details. In detail, the principle states:
+1. High-level modules should not depend on low-level modules. Both should depend on abstractions (e.g. interfaces).
+2. Abstractions should not depend on details. Details (concrete implementations) should depend on abstractions.
+
+By dictating that both high-level and low-level objects must depend on the same abstraction, this design principle inverts the way some people may think about object-oriented programming.
+
+Thinking about the interactions as abstract concepts themselves, allows us to de-couple components while maintaining a lighter and less implementation-dependant interaction schema.
+
+Sources for this module: [Wikipedia](https://en.wikipedia.org/wiki/Dependency_inversion_principle), [Head First Design Patterns](http://ce.sharif.edu/courses/96-97/2/ce484-1/resources/root/Design%20Patterns/Eric%20Freeman,%20Elisabeth%20Freeman,%20Kathy%20Sierra,%20Bert%20Bates-Head%20First%20Design%20Patterns%20-OReilly%20(2008).pdf)
+
+### **Mixins**
+Mixins are a special type of multiple inheritance. There are two typical situations that 
+require mixins:
+1. You want to add in a lot of features and/or methods for a class
+2. You want to use a particular feature and/or across many different classes
+
+Sometimes we might refer to mixins as being `included` as opposed to `inherited`. Mixins help us abide by the [dependancy inversion principle](#dependency-inversion-principle-dip). Lets walk through the following example where we image we're game makers creating an open world safari adventure game! Let's define some animals:
+
+**Bad Design:**
+```python
+class Hare:
+    def run(self):
+        pass
+    def sleep(self):
+        pass
+    def eat(self):
+        pass
+
+class Eagle:
+    def fly(self):
+        pass
+    def sleep(self):
+        pass
+    def eat(self):
+       pass
+```
+And now we realise the scope of our project requires a turtle that can also `sleep` and `eat`. So, as we know, inheritance can be a powerful tool and also save us some time writting code. So we attempt the following:
+```python
+class Turtle(Hare):
+    def swim(self):
+        pass
+```
+But, we now realise that Turtle don't run, they crawl. Well, we simply overide our run method to call to our crawl method:
+```python 
+class Turtle(Hare):
+    def swim(self):
+        pass
+    def crawl(self):
+        pass
+    def run(self):
+        return self.crawl()  
+```
+Well, okay. That might have fixed it. But does this really make sense? Or is there a *base abstraction* we can pull out here? We will come back to this later. 
+
+We just got an update from marketting that the latest research indicates that gamers really want to play as a Canadian Goose! Well, Canadian Goose swim, run, fly, sleep AND most importantly, poop. So we do the following:
+
+```python 
+class Duck(Hare, Eagle, Turtle):
+    def poop(self):
+        pass
+```
+Okay, that was somewhat easy. We have multple inheritance that seems to cover all of our basses. But lets think about this a little bit. What happens when we ask our duck to run? Which class method gets chosen? The same issue goes for when we ask the duck to sleep or eat, what would happen? Imagine having to debug this in production! We call this issue the [**Diamond Problem**](https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem).
+
+So lets go over all our current concerns:
+1. This is clearly confusing to any reader. 
+2. Inherting from concrete classes beging to introduce dependancy webs.
+3. Debuging can become a nightmare!
+
+**Better Design**:
+
+Imaging we got to go back in time and right our wrongs. What might we have done differently?
+
+1. Instead of having our `Tortoise` inherit from a `Hare` we create a *abstract* mixin that they BOTH inherit from.
+
+```python
+class AnimalMixin:
+    def sleep(self):
+        pass
+    def eat(self):
+        pass
+
+class Hare(AnimalMixin):
+    def run(self):
+        pass
+
+class Eagle(AnimalMixin):
+    def fly(self):
+        pass
+
+class Turtle(AnimalMixin):
+    def swim(self):
+        pass
+    def crawl(self):
+        pass
+```
+2. Instead of having our Duck inherite from any one class, we can inherit from the AnimalMixin and also create other sets of mixins for the common methods shared across classes. This will allow us to easily identify any potential issues when methods are called and also consolidate code.
+```python
+class AnimalMixin:
+    def sleep(self):
+        pass
+    def eat(self):
+        pass
+    def poop(self):
+        pass
+
+class BirdMixin:
+    def fly(self):
+        pass
+
+class SwimMixin: # Can you think of a better name?
+    def swim(self):
+        pass
+
+class Hare(AnimalMixin):
+    def run(self):
+        pass
+
+class Eagle(AnimalMixin, BirdMixin):
+    pass
+
+class Turtle(AnimalMixin, SwimMixin):
+    def crawl(self):
+        pass
+
+class Duck(AnimialMixin, BirdMixin, SwimMixin):
+        pass
+
+```
+From here we could go on and on adding in new classes. For instance, what might we refactor into a Mixin class if we added a `Cheetah`, `Gazelle` and `Springbok`? We could do the refactoring in advance (or in anticipation) but that in itself can lead to errors and complications. Why should there be an abstraction if its only being used in one place? 
+
+**Takeaways:**
+1. Avoid inheriting from concrete classes at all costs
+2. Use Abstractions(Mixins) in place
+3. Only create abstractions when there is an existing use case (avoid confusing readers)
+
+
+
 
