@@ -14,17 +14,17 @@
      3. [L: Liskov Substitution Principle (LSP)](#liskov-substitution-principle-lsp)
      4. [I: Interface Segregation Principle (ISP)](#interface-segregation-principle-isp)
      5. [D: Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip)
-  6. [Don"t repeat yourself (DRY)](#dont-repeat-yourself-dry)
+  6. [Don't repeat yourself (DRY)](#dont-repeat-yourself-dry)
 
 ## Introduction
 
-Software engineering principles, from Robert C. Martin"s book
+Software engineering principles, from Robert C. Martin's book
 [*Clean Code*](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882),
-adapted for Python. This is not a style guide. It"s a guide to producing
+adapted for Python. This is not a style guide. It's a guide to producing
 readable, reusable, and refactorable software in Python.
 
-Not every principle herein has to be strictly followed, and even fewer will be universally 
-agreed upon. These are guidelines and nothing more, but they are ones codified over many 
+Not every principle herein has to be strictly followed, and even fewer will be universally
+agreed upon. These are guidelines and nothing more, but they are ones codified over many
 years of collective experience by the authors of *Clean Code*.
 
 Inspired from [clean-code-javascript](https://github.com/ryanmcdermott/clean-code-javascript)
@@ -90,14 +90,13 @@ class User:
 
     def get_record(self) -> Union[Record, None]:
         return Record()
-        
 ```
 
 **[⬆ back to top](#table-of-contents)**
 
 ### Use searchable names
-We will read more code than we will ever write. It"s important that the code we do write is 
-readable and searchable. By *not* naming variables that end up being meaningful for 
+We will read more code than we will ever write. It's important that the code we do write is
+readable and searchable. By *not* naming variables that end up being meaningful for
 understanding our program, we hurt our readers.
 Make your names searchable.
 
@@ -137,7 +136,7 @@ if matches:
 
 **Not bad**:
 
-It"s better, but we are still heavily dependent on regex.
+It's better, but we are still heavily dependent on regex.
 
 ```python
 import re
@@ -197,9 +196,9 @@ for location in locations:
 **[⬆ back to top](#table-of-contents)**
 
 
-### Don"t add unneeded context
+### Don't add unneeded context
 
-If your class/object name tells you something, don"t repeat that in your
+If your class/object name tells you something, don't repeat that in your
 variable name.
 
 **Bad:**
@@ -256,13 +255,13 @@ def create_micro_brewery(name: Text = "Hipster Brew Co."):
 **[⬆ back to top](#table-of-contents)**
 ## **Functions**
 ### Function arguments (2 or fewer ideally)
-Limiting the amount of function parameters is incredibly important because it makes 
-testing your function easier. Having more than three leads to a combinatorial explosion 
+Limiting the amount of function parameters is incredibly important because it makes
+testing your function easier. Having more than three leads to a combinatorial explosion
 where you have to test tons of different cases with each separate argument.
 
-Zero arguments is the ideal case. One or two arguments is ok, and three should be avoided. 
-Anything more than that should be consolidated. Usually, if you have more than two 
-arguments then your function is trying to do too much. In cases where it"s not, most 
+Zero arguments is the ideal case. One or two arguments is ok, and three should be avoided.
+Anything more than that should be consolidated. Usually, if you have more than two
+arguments then your function is trying to do too much. In cases where it's not, most
 of the time a higher-level object will suffice as an argument.
 
 **Bad:**
@@ -422,7 +421,7 @@ def create_menu(config: MenuConfig):
 create_menu(
     # You need to supply all the parameters
     MenuConfig(
-        title="My delicious menu", 
+        title="My delicious menu",
         body="A description of the various items on the menu",
         button_text="Order now!",
         cancellable=True
@@ -432,10 +431,10 @@ create_menu(
 **[⬆ back to top](#table-of-contents)**
 
 ### Functions should do one thing
-This is by far the most important rule in software engineering. When functions do more 
-than one thing, they are harder to compose, test, and reason about. When you can isolate 
-a function to just one action, they can be refactored easily and your code will read much 
-cleaner. If you take nothing else away from this guide other than this, you"ll be ahead 
+This is by far the most important rule in software engineering. When functions do more
+than one thing, they are harder to compose, test, and reason about. When you can isolate
+a function to just one action, they can be refactored easily and your code will read much
+cleaner. If you take nothing else away from this guide other than this, you'll be ahead
 of many developers.
 
 **Bad:**
@@ -544,7 +543,7 @@ message.send()
 
 ### Functions should only be one level of abstraction
 
-When you have more than one level of abstraction, your function is usually doing too 
+When you have more than one level of abstraction, your function is usually doing too
 much. Splitting up functions leads to reusability and easier testing.
 
 **Bad:**
@@ -610,10 +609,10 @@ def parse(tokens: List) -> List:
 
 **[⬆ back to top](#table-of-contents)**
 
-### Don"t use flags as function parameters
+### Don't use flags as function parameters
 
-Flags tell your user that this function does more than one thing. Functions 
-should do one thing. Split your functions if they are following different code 
+Flags tell your user that this function does more than one thing. Functions
+should do one thing. Split your functions if they are following different code
 paths based on a boolean.
 
 **Bad:**
@@ -651,14 +650,14 @@ def create_temp_file(name: Text) -> None:
 
 ### Avoid side effects
 
-A function produces a side effect if it does anything other than take a value in 
-and return another value or values. For example, a side effect could be writing 
+A function produces a side effect if it does anything other than take a value in
+and return another value or values. For example, a side effect could be writing
 to a file, modifying some global variable, or accidentally wiring all your money
 to a stranger.
 
 Now, you do need to have side effects in a program on occasion - for example, like
 in the previous example, you might need to write to a file. In these cases, you
-should centralize and indicate where you are incorporating side effects. Don"t have
+should centralize and indicate where you are incorporating side effects. Don't have
 several functions and classes that write to a particular file - rather, have one
 (and only one) service that does it.
 
@@ -673,7 +672,7 @@ If you can do this, you will be happier than the vast majority of other programm
 # type: ignore
 
 # This is a module-level name.
-# It"s good practice to define these as immutable values, such as a string.
+# It's good practice to define these as immutable values, such as a string.
 # However...
 fullname = "Ryan McDermott"
 
@@ -686,7 +685,7 @@ def split_into_first_and_last_name() -> None:
 
 split_into_first_and_last_name()
 
-# MyPy will spot the problem, complaining about 'Incompatible types in 
+# MyPy will spot the problem, complaining about 'Incompatible types in
 # assignment: (expression has type "List[str]", variable has type "str")'
 print(fullname)  # ["Ryan", "McDermott"]
 
@@ -720,7 +719,7 @@ class Person:
 
     @property
     def name_as_first_and_last(self) -> list:
-        return self.name.split() 
+        return self.name.split()
 
 
 # The reason why we create instances of classes is to manage state!
@@ -749,7 +748,7 @@ print(person.name_as_first_and_last)  # => ["Ryan", "McDermott"]
 
 **[⬆ back to top](#table-of-contents)**
 
-## **Don"t repeat yourself (DRY)**
+## **Don't repeat yourself (DRY)**
 
 *Coming soon*
 
