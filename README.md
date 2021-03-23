@@ -230,6 +230,19 @@ def create_menu(title, body, button_text, cancellable):
     # ...
 ```
 
+**Light and good**
+```python
+kargs = {
+    'arg0': 'Hello',
+    'arg1': 'World',
+}
+
+def myfunction(arg0, arg1):
+    print(f'arg0:{arg0} arg1:{arg1}')
+
+myfunction(**kargs)
+```
+
 **Good**:
 ```python
 class Menu:
