@@ -890,3 +890,8 @@ company_managers_list = get_employee_list(employees=company_managers)
 
 **[⬆ back to top](#table-of-contents)**
 
+## **Translation**
+
+This is also available in other languages:
+
+- ![br](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Brazil.png) **Brazilian Portuguese**: [fredsonchaves07/clean-code-python](https://github.com/fredsonchaves07/clean-code-python)
