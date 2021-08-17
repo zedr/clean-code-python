@@ -15,6 +15,7 @@
      4. [I: Interface Segregation Principle (ISP)](#interface-segregation-principle-isp)
      5. [D: Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip)
   6. [Don't repeat yourself (DRY)](#dont-repeat-yourself-dry)
+  7. [Translation](#translation)
 
 ## Introduction
 
@@ -916,3 +917,5 @@ company_managers_list = get_employee_list(employees=company_managers)
 This is also available in other languages:
 
 - ![br](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Brazil.png) **Brazilian Portuguese**: [fredsonchaves07/clean-code-python](https://github.com/fredsonchaves07/clean-code-python)
+
+**[⬆ back to top](#table-of-contents)**
