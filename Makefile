@@ -1,7 +1,7 @@
 .PHONY: deps clean tests
 
 ENV=.env
-PYTHON=python3.8
+PYTHON=python3
 PYTHON_VERSION=$(shell ${PYTHON} -V | cut -d " " -f 2 | cut -c1-3)
 SITE_PACKAGES=${ENV}/lib/python${PYTHON_VERSION}/site-packages
 IN_ENV=source ${ENV}/bin/activate;
