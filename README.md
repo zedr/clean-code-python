@@ -36,6 +36,7 @@ Targets Python3.7+
 ### Use meaningful and pronounceable variable names
 
 **Bad:**
+
 ```python
 import datetime
 
@@ -44,6 +45,7 @@ ymdstr = datetime.date.today().strftime("%y-%m-%d")
 ```
 
 **Good**:
+
 ```python
 import datetime
 
@@ -56,6 +58,7 @@ current_date: str = datetime.date.today().strftime("%y-%m-%d")
 
 **Bad:**
 Here we use three different names for the same underlying entity:
+
 ```python
 def get_user_info(): pass
 def get_client_data(): pass
@@ -64,6 +67,7 @@ def get_customer_record(): pass
 
 **Good**:
 If the entity is the same, you should be consistent in referring to it in your functions:
+
 ```python
 def get_user_info(): pass
 def get_user_data(): pass
@@ -102,6 +106,7 @@ understanding our program, we hurt our readers.
 Make your names searchable.
 
 **Bad:**
+
 ```python
 import time
 
@@ -111,6 +116,7 @@ time.sleep(86400)
 ```
 
 **Good**:
+
 ```python
 import time
 
@@ -123,6 +129,7 @@ time.sleep(SECONDS_IN_A_DAY)
 
 ### Use explanatory variables
 **Bad:**
+
 ```python
 import re
 
@@ -155,6 +162,7 @@ if matches:
 **Good**:
 
 Decrease dependence on regex by naming subpatterns.
+
 ```python
 import re
 
@@ -173,6 +181,7 @@ Don’t force the reader of your code to translate what the variable means.
 Explicit is better than implicit.
 
 **Bad:**
+
 ```python
 seq = ("Austin", "New York", "San Francisco")
 
@@ -185,6 +194,7 @@ for item in seq:
 ```
 
 **Good**:
+
 ```python
 locations = ("Austin", "New York", "San Francisco")
 
@@ -266,12 +276,14 @@ arguments then your function is trying to do too much. In cases where it's not, 
 of the time a higher-level object will suffice as an argument.
 
 **Bad:**
+
 ```python
 def create_menu(title, body, button_text, cancellable):
     pass
 ```
 
 **Java-esque**:
+
 ```python
 class Menu:
     def __init__(self, config: dict):
@@ -290,6 +302,7 @@ menu = Menu(
 ```
 
 **Also good**
+
 ```python
 from typing import Text
 
@@ -326,6 +339,7 @@ create_menu(config)
 ```
 
 **Fancy**
+
 ```python
 from typing import NamedTuple
 
@@ -360,6 +374,7 @@ create_menu(
 ```
 
 **Even fancier**
+
 ```python
 from typing import Text
 from dataclasses import astuple, dataclass
@@ -395,6 +410,7 @@ create_menu(
 ```
 
 **Even fancier, Python3.8+ only**
+
 ```python
 from typing import TypedDict, Text
 
@@ -439,6 +455,7 @@ cleaner. If you take nothing else away from this guide other than this, you'll b
 of many developers.
 
 **Bad:**
+
 ```python
 from typing import List
 
@@ -460,6 +477,7 @@ def email_clients(clients: List[Client]) -> None:
 ```
 
 **Good**:
+
 ```python
 from typing import List
 
@@ -488,6 +506,7 @@ def email_clients(clients: List[Client]) -> None:
 Do you see an opportunity for using generators now?
 
 **Even better**
+
 ```python
 from typing import Generator, Iterator
 
@@ -695,6 +714,7 @@ print(fullname)  # ["Ryan", "McDermott"]
 ```
 
 **Good:**
+
 ```python
 from typing import List, AnyStr
 
@@ -709,6 +729,7 @@ print(name, surname)  # => Ryan McDermott
 ```
 
 **Also good**
+
 ```python
 from typing import Text
 from dataclasses import dataclass
@@ -891,9 +912,9 @@ company_managers_list = get_employee_list(employees=company_managers)
 
 **[⬆ back to top](#table-of-contents)**
 
-## **Translation**
+## **Translations**
 
-This is also available in other languages:
+This document is also available in other languages:
 
 - ![br](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Brazil.png) **Brazilian Portuguese**: [fredsonchaves07/clean-code-python](https://github.com/fredsonchaves07/clean-code-python)
 
