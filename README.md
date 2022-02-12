@@ -79,7 +79,7 @@ Python is (also) an object oriented programming language. If it makes sense, pac
 of the entity in your code, as instance attributes, property methods, or methods:
 
 ```python
-from typing import Union, Dict, Text
+from typing import Union, Dict
 
 
 class Record:
@@ -90,7 +90,7 @@ class User:
     info : str
 
     @property
-    def data(self) -> Dict[Text, Text]:
+    def data(self) -> Dict[str, str]:
         return {}
 
     def get_record(self) -> Union[Record, None]:
@@ -254,11 +254,10 @@ you are expecting a string as the argument.
 **Good**:
 
 ```python
-from typing import Text
 import hashlib
 
 
-def create_micro_brewery(name: Text = "Hipster Brew Co."):
+def create_micro_brewery(name: str = "Hipster Brew Co."):
     slug = hashlib.sha1(name.encode()).hexdigest()
     # etc.
 ```
@@ -304,9 +303,6 @@ menu = Menu(
 **Also good**
 
 ```python
-from typing import Text
-
-
 class MenuConfig:
     """A configuration for the Menu.
 
@@ -316,9 +312,9 @@ class MenuConfig:
         button_text: The text for the button label.
         cancellable: Can it be cancelled?
     """
-    title: Text
-    body: Text
-    button_text: Text
+    title: str
+    body: str
+    button_text: str
     cancellable: bool = False
 
 
@@ -376,7 +372,6 @@ create_menu(
 **Even fancier**
 
 ```python
-from typing import Text
 from dataclasses import astuple, dataclass
 
 
@@ -390,9 +385,9 @@ class MenuConfig:
         button_text: The text for the button label.
         cancellable: Can it be cancelled?
     """
-    title: Text
-    body: Text
-    button_text: Text
+    title: str
+    body: str
+    button_text: str
     cancellable: bool = False
 
 def create_menu(config: MenuConfig):
@@ -412,7 +407,7 @@ create_menu(
 **Even fancier, Python3.8+ only**
 
 ```python
-from typing import TypedDict, Text
+from typing import TypedDict
 
 
 class MenuConfig(TypedDict):
@@ -424,9 +419,9 @@ class MenuConfig(TypedDict):
         button_text: The text for the button label.
         cancellable: Can it be cancelled?
     """
-    title: Text
-    body: Text
-    button_text: Text
+    title: str
+    body: str
+    button_text: str
     cancellable: bool
 
 
@@ -593,7 +588,7 @@ def parse_better_js_alternative(code: str) -> None:
 **Good:**
 
 ```python
-from typing import Tuple, List, Text, Dict
+from typing import Tuple, List, Dict
 
 
 REGEXES: Tuple = (
@@ -601,7 +596,7 @@ REGEXES: Tuple = (
 )
 
 
-def parse_better_js_alternative(code: Text) -> None:
+def parse_better_js_alternative(code: str) -> None:
     tokens: List = tokenize(code)
     syntax_tree: List = parse(tokens)
 
@@ -609,7 +604,7 @@ def parse_better_js_alternative(code: Text) -> None:
         pass
 
 
-def tokenize(code: Text) -> List:
+def tokenize(code: str) -> List:
     statements = code.split()
     tokens: List[Dict] = []
     for regex in REGEXES:
@@ -638,12 +633,11 @@ paths based on a boolean.
 **Bad:**
 
 ```python
-from typing import Text
 from tempfile import gettempdir
 from pathlib import Path
 
 
-def create_file(name: Text, temp: bool) -> None:
+def create_file(name: str, temp: bool) -> None:
     if temp:
         (Path(gettempdir()) / name).touch()
     else:
@@ -653,16 +647,15 @@ def create_file(name: Text, temp: bool) -> None:
 **Good:**
 
 ```python
-from typing import Text
 from tempfile import gettempdir
 from pathlib import Path
 
 
-def create_file(name: Text) -> None:
+def create_file(name: str) -> None:
     Path(name).touch()
 
 
-def create_temp_file(name: Text) -> None:
+def create_temp_file(name: str) -> None:
     (Path(gettempdir()) / name).touch()
 ```
 
@@ -731,13 +724,12 @@ print(name, surname)  # => Ryan McDermott
 **Also good**
 
 ```python
-from typing import Text
 from dataclasses import dataclass
 
 
 @dataclass
 class Person:
-    name: Text
+    name: str
 
     @property
     def name_as_first_and_last(self) -> list:
@@ -797,12 +789,12 @@ updating multiple places any time you want to change one thing.
 **Bad:**
 
 ```python
-from typing import List, Text, Dict
+from typing import List, Dict
 from dataclasses import dataclass
 
 @dataclass
 class Developer:
-    def __init__(self, experience: float, github_link: Text) -> None:
+    def __init__(self, experience: float, github_link: str) -> None:
         self._experience = experience
         self._github_link = github_link
         
@@ -811,12 +803,12 @@ class Developer:
         return self._experience
     
     @property
-    def github_link(self) -> Text:
+    def github_link(self) -> str:
         return self._github_link
     
 @dataclass
 class Manager:
-    def __init__(self, experience: float, github_link: Text) -> None:
+    def __init__(self, experience: float, github_link: str) -> None:
         self._experience = experience
         self._github_link = github_link
         
@@ -825,7 +817,7 @@ class Manager:
         return self._experience
     
     @property
-    def github_link(self) -> Text:
+    def github_link(self) -> str:
         return self._github_link
     
 
@@ -865,12 +857,12 @@ company_managers_list = get_manager_list(managers=company_managers)
 **Good:**
 
 ```python
-from typing import List, Text, Dict
+from typing import List, Dict
 from dataclasses import dataclass
 
 @dataclass
 class Employee:
-    def __init__(self, experience: float, github_link: Text) -> None:
+    def __init__(self, experience: float, github_link: str) -> None:
         self._experience = experience
         self._github_link = github_link
         
@@ -879,7 +871,7 @@ class Employee:
         return self._experience
     
     @property
-    def github_link(self) -> Text:
+    def github_link(self) -> str:
         return self._github_link
     
 
