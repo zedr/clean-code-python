@@ -774,6 +774,8 @@ print(person.name_as_first_and_last)  # => ["Ryan", "McDermott"]
 ### **Interface Segregation Principle (ISP)**
 ### **Dependency Inversion Principle (DIP)**
 
+Read more about SOLID principles: [here](https://towardsdatascience.com/solid-coding-in-python-1281392a6a94)
+
 *Coming soon*
 
 **[⬆ back to top](#table-of-contents)**
