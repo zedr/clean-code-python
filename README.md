@@ -11,14 +11,14 @@
   * [Use searchable names](#use-searchable-names)
   * [Use explanatory variables](#use-explanatory-variables)
   * [Avoid Mental Mapping](#avoid-mental-mapping)
-  * [Don't add unneeded context](#don-t-add-unneeded-context)
+  * [Do not add unneeded context](#do-not-add-unneeded-context)
   * [Use default arguments instead of short circuiting or conditionals](#use-default-arguments-instead-of-short-circuiting-or-conditionals)
 - [**Functions**](#--functions--)
   * [Function arguments (2 or fewer ideally)](#function-arguments--2-or-fewer-ideally-)
   * [Functions should do one thing](#functions-should-do-one-thing)
   * [Function names should say what they do](#function-names-should-say-what-they-do)
   * [Functions should only be one level of abstraction](#functions-should-only-be-one-level-of-abstraction)
-  * [Don't use flags as function parameters](#don-t-use-flags-as-function-parameters)
+  * [Do not use flags as function parameters](#do-not-use-flags-as-function-parameters)
   * [Avoid side effects](#avoid-side-effects)
 - [**Objects and Data Structures**](#--objects-and-data-structures--)
 - [**Classes**](#--classes--)
@@ -27,7 +27,7 @@
   * [**Liskov Substitution Principle (LSP)**](#--liskov-substitution-principle--lsp---)
   * [**Interface Segregation Principle (ISP)**](#--interface-segregation-principle--isp---)
   * [**Dependency Inversion Principle (DIP)**](#--dependency-inversion-principle--dip---)
-- [**Don't repeat yourself (DRY)**](#--don-t-repeat-yourself--dry---)
+- [**Do not repeat yourself (DRY)**](#--do-not-repeat-yourself--dry---)
 - [**Translations**](#--translations--)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
@@ -223,7 +223,7 @@ for location in locations:
 **[⬆ back to top](#table-of-contents)**
 
 
-### Don't add unneeded context
+### Do not add unneeded context
 
 If your class/object name tells you something, don't repeat that in your
 variable name.
@@ -640,7 +640,7 @@ def parse(tokens: List) -> List:
 
 **[⬆ back to top](#table-of-contents)**
 
-### Don't use flags as function parameters
+### Do not use flags as function parameters
 
 Flags tell your user that this function does more than one thing. Functions
 should do one thing. Split your functions if they are following different code
@@ -778,7 +778,7 @@ print(person.name_as_first_and_last)  # => ["Ryan", "McDermott"]
 
 **[⬆ back to top](#table-of-contents)**
 
-## **Don't repeat yourself (DRY)**
+## **Do not repeat yourself (DRY)**
 
 Try to observe the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle.
 
