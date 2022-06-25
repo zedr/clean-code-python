@@ -2,6 +2,7 @@ import importlib
 import re
 import time
 import typing
+from pathlib import Path
 
 import pytest
 from mypy import api
@@ -21,7 +22,7 @@ def fake_print(*args, **kwargs):
 def pytest_collect_file(parent, path):
     """Collect all file suitable for use in tests"""
     if path.basename == "README.md":
-        return ReadmeFile.from_parent(parent, fspath=path)
+        return ReadmeFile.from_parent(parent, path=Path(path))
 
 
 class ReadmeFile(pytest.File):
