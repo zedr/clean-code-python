@@ -4,18 +4,34 @@
 [![](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/download/releases/3.8.3/)
 
 ## Table of Contents
-  1. [Introduction](#introduction)
-  2. [Variables](#variables)
-  3. [Functions](#functions)
-  4. [Objects and Data Structures](#objects-and-data-structures)
-  5. [Classes](#classes)
-     1. [S: Single Responsibility Principle (SRP)](#single-responsibility-principle-srp)
-     2. [O: Open/Closed Principle (OCP)](#openclosed-principle-ocp)
-     3. [L: Liskov Substitution Principle (LSP)](#liskov-substitution-principle-lsp)
-     4. [I: Interface Segregation Principle (ISP)](#interface-segregation-principle-isp)
-     5. [D: Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip)
-  6. [Don't repeat yourself (DRY)](#dont-repeat-yourself-dry)
-  7. [Translation](#translation)
+- [Introduction](#introduction)
+- [**Variables**](#--variables--)
+  * [Use meaningful and pronounceable variable names](#use-meaningful-and-pronounceable-variable-names)
+  * [Use the same vocabulary for the same type of variable](#use-the-same-vocabulary-for-the-same-type-of-variable)
+  * [Use searchable names](#use-searchable-names)
+  * [Use explanatory variables](#use-explanatory-variables)
+  * [Avoid Mental Mapping](#avoid-mental-mapping)
+  * [Do not add unneeded context](#do-not-add-unneeded-context)
+  * [Use default arguments instead of short circuiting or conditionals](#use-default-arguments-instead-of-short-circuiting-or-conditionals)
+- [**Functions**](#--functions--)
+  * [Function arguments (2 or fewer ideally)](#function-arguments--2-or-fewer-ideally-)
+  * [Functions should do one thing](#functions-should-do-one-thing)
+  * [Function names should say what they do](#function-names-should-say-what-they-do)
+  * [Functions should only be one level of abstraction](#functions-should-only-be-one-level-of-abstraction)
+  * [Do not use flags as function parameters](#do-not-use-flags-as-function-parameters)
+  * [Avoid side effects](#avoid-side-effects)
+- [**Objects and Data Structures**](#objects-and-data-structures)
+- [**Classes**](#classes)
+    1. [S: Single Responsibility Principle (SRP)](#single-responsibility-principle-srp)
+    2. [O: Open/Closed Principle (OCP)](#openclosed-principle-ocp)
+    3. [L: Liskov Substitution Principle (LSP)](#liskov-substitution-principle-lsp)
+    4. [I: Interface Segregation Principle (ISP)](#interface-segregation-principle-isp)
+    5. [D: Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip)
+- [**Don't repeat yourself (DRY)**](#dont-repeat-yourself-dry)
+- [**Translation**](#translation)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 
 ## Introduction
 
@@ -207,7 +223,7 @@ for location in locations:
 **[⬆ back to top](#table-of-contents)**
 
 
-### Don't add unneeded context
+### Do not add unneeded context
 
 If your class/object name tells you something, don't repeat that in your
 variable name.
@@ -624,7 +640,7 @@ def parse(tokens: List) -> List:
 
 **[⬆ back to top](#table-of-contents)**
 
-### Don't use flags as function parameters
+### Do not use flags as function parameters
 
 Flags tell your user that this function does more than one thing. Functions
 should do one thing. Split your functions if they are following different code
@@ -758,11 +774,13 @@ print(person.name_as_first_and_last)  # => ["Ryan", "McDermott"]
 ### **Interface Segregation Principle (ISP)**
 ### **Dependency Inversion Principle (DIP)**
 
+Read more about SOLID principles: [here](https://towardsdatascience.com/solid-coding-in-python-1281392a6a94)
+
 *Coming soon*
 
 **[⬆ back to top](#table-of-contents)**
 
-## **Don't repeat yourself (DRY)**
+## **Do not repeat yourself (DRY)**
 
 Try to observe the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle.
 
