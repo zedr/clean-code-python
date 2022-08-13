@@ -1131,6 +1131,175 @@ error: Signature of "get" incompatible with supertype "View"
 ```
 
 ### **Interface Segregation Principle (ISP)**
+
+> “Keep interfaces small
+> so that users don’t end up depending on things they don’t need.”,
+> Uncle Bob.
+
+Several well known object oriented programming languages, like Java and Go,
+have a concept called interfaces. An interface defines the public methods and
+properties of an object without implementing them. They are useful when we don't
+want to couple the signature of a function to a concrete object; we'd rather
+say "I don't care what object you give me, as long as it has certain methods
+and attributes I expect to make use of".
+
+Python does not have interfaces. We have Abstract Base Classes instead, which
+are a little different, but can serve the same purpose.
+
+**Good**
+```python
+
+from abc import ABCMeta, abstractmethod
+
+
+# Define the Abstract Class for a generic Greeter object
+class Greeter(metaclass=ABCMeta):
+    """An object that can perform a greeting action."""
+
+    @staticmethod
+    @abstractmethod
+    def greet(name: str) -> None:
+        """Display a greeting for the user with the given name"""
+
+
+class FriendlyActor(Greeter):
+    """An actor that greets the user with a friendly salutation"""
+
+    @staticmethod
+    def greet(name: str) -> None:
+        """Greet a person by name"""
+        print(f"Hello {name}!")
+
+
+def welcome_user(user_name: str, actor: Greeter):
+    """Welcome a user with a given name using the provided actor"""
+    actor.greet(user_name)
+
+
+welcome_user("Barbara", FriendlyActor())
+```
+
+Now imagine the following scenario: we have a certain number of PDF documents
+that we author and want to serve to our web site visitors. We are using a
+Python web framework and we might be tempted to design a class to manage these
+documents, so we go ahead and design a comprehensive abstract base class for
+our document.
+
+**Error**
+```python
+import abc
+
+
+class Persistable(metaclass=abc.ABCMeta):
+    """Serialize a file to data and back"""
+
+    @property
+    @abc.abstractmethod
+    def data(self) -> bytes:
+        """The raw data of the file"""
+
+    @classmethod
+    @abc.abstractmethod
+    def load(cls, name: str):
+        """Load the file from disk"""
+
+    @abc.abstractmethod
+    def save(self) -> None:
+        """Save the file to disk"""
+
+
+# We just want to serve the documents, so our concrete PDF document
+# implementation just needs to implement the `.load()` method and have
+# a public attribute named `data`.
+
+class PDFDocument(Persistable):
+    """A PDF document"""
+
+    @property
+    def data(self) -> bytes:
+        """The raw bytes of the PDF document"""
+        ... # Code goes here - omitted for brevity
+
+    @classmethod
+    def load(cls, name: str):
+        """Load the file from the local filesystem"""
+        ... # Code goes here - omitted for brevity
+
+
+def view(request):
+    """A web view that handles a GET request for a document"""
+    requested_name = request.qs['name'] # We want to validate this!
+    return PDFDocument.load(requested_name).data
+
+```
+
+But we can't! If we don't implement the `.save()` method, an exception will be
+raised:
+
+```
+Can't instantiate abstract class PDFDocument with abstract method save.
+```
+
+That's annoying. We don't really need to implement `.save()` here. We could
+implement a dummy method that does nothing or raises `NotImplementedError`,
+but that's useless code that we will need to maintain.
+
+At the same time, if we remove `.save()` from the abstract class now we will
+need to add it back when we will later implement a way for users to submit
+their documents, bringing us back to the same situation as before.
+
+The problem is that we have written an *interface* that has features we don't
+need right now as we are not using them.
+
+The solution is to decompose the interface into smaller and composable interfaces
+that segregate each feature.
+
+**Good**
+```python
+import abc
+
+
+class DataCarrier(metaclass=abc.ABCMeta):
+    """Carries a data payload"""
+    @property
+    def data(self):
+        ...
+
+class Loadable(DataCarrier):
+    """Can load data from storage by name"""
+    @classmethod
+    @abc.abstractmethod
+    def load(cls, name: str):
+        ...
+
+class Saveable(DataCarrier):
+    """Can save data to storage"""
+    @abc.abstractmethod
+    def save(self) -> None:
+        ...
+
+
+class PDFDocument(Loadable):
+    """A PDF document"""
+
+    @property
+    def data(self) -> bytes:
+        """The raw bytes of the PDF document"""
+        ... # Code goes here - omitted for brevity
+
+    @classmethod
+    def load(cls, name: str):
+        """Load the file from the local filesystem"""
+        ... # Code goes here - omitted for brevity
+
+
+def view(request):
+    """A web view that handles a GET request for a document"""
+    requested_name = request.qs['name'] # We want to validate this!
+    return PDFDocument.load(requested_name).data
+
+```
+
 ### **Dependency Inversion Principle (DIP)**
 
 *Coming soon*
