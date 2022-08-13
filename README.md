@@ -936,7 +936,7 @@ class TemplateView(View):
 
     def render_body(self) -> str:
         """Render the message body as HTML"""
-        with open("index.html") as fd:
+        with open(self.template_file) as fd:
             return fd.read()
 
 
@@ -946,6 +946,100 @@ Note that we did need to override the `render_body()` in order to change the
 source of the body, but this method has a single, well defined responsibility
 that **invites subtypes to override it**. It is designed to be extended by its
 subtypes.
+
+Another good way to use the strengths of both object inheritance and object
+composition is to use [Mixins](https://docs.djangoproject.com/en/4.1/topics/class-based-views/mixins/).
+
+Mixins are bare-bones classes that are meant to be used exclusively with other
+related classes. They are "mixed-in" with the target class using multiple
+inheritance, in order to change the target's behaviour.
+
+A few rules:
+ - Mixins should always inherit from `object`
+ - Mixins always come before the target class, e.g. `class Foo(MixinA, MixinB, TargetClass): ...`
+
+**Also good**
+```python
+from dataclasses import dataclass, field
+from typing import Protocol
+
+
+@dataclass
+class Response:
+    """An HTTP response"""
+
+    status: int
+    content_type: str
+    body: str
+    headers: dict = field(default_factory=dict)
+
+
+class View:
+    """A simple view that returns plain text responses"""
+
+    content_type = "text/plain"
+
+    def render_body(self) -> str:
+        """Render the message body of the response"""
+        return "Welcome to my web site"
+
+    def get(self, request) -> Response:
+        """Handle a GET request and return a message in the response"""
+        return Response(
+            status=200,
+            content_type=self.content_type,
+            body=self.render_body()
+        )
+
+
+class TemplateRenderMixin:
+    """A mixin class for views that render HTML documents using a template file
+
+    Not to be used by itself!
+    """
+    template_file: str = ""
+
+    def render_body(self) -> str:
+        """Render the message body as HTML"""
+        if not self.template_file:
+            raise ValueError("The path to a template file must be given.")
+
+        with open(self.template_file) as fd:
+            return fd.read()
+
+
+class ContentLengthMixin:
+    """A mixin class for views that injects a Content-Length header in the
+    response
+
+    Not to be used by itself!
+    """
+
+    def get(self, request) -> Response:
+        """Introspect and amend the response to inject the new header"""
+        response = super().get(request) # type: ignore
+        response.headers['Content-Length'] = len(response.body)
+        return response
+
+
+class TemplateView(TemplateRenderMixin, ContentLengthMixin, View):
+    """A view that returns HTML responses based on a template file."""
+
+    content_type = "text/html"
+    template_file = "index.html"
+
+```
+
+As you can see, Mixins make object composition easier by packaging together
+related functionality into a highly reusable class with a single responsibility,
+allowing clean decoupling. Class extension is achieved by "mixing-in" the
+additional classes.
+
+The popular Django project makes heavy use of Mixins to compose its class-based
+views.
+
+FIXME: re-enable typechecking for the line above once it's clear how to use
+`typing.Protocol` to make the type checker work with Mixins.
 
 ### **Liskov Substitution Principle (LSP)**
 ### **Interface Segregation Principle (ISP)**
