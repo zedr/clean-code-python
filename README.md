@@ -44,6 +44,8 @@ import datetime
 ymdstr = datetime.date.today().strftime("%y-%m-%d")
 ```
 
+Additionally, there's no need to add the type of the variable (str) to its name.
+
 **Good**:
 
 ```python
