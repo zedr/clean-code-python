@@ -830,7 +830,8 @@ As an added bonus, the `get_version()` is now reusable elsewhere.
 ### **Open/Closed Principle (OCP)**
 
 > “Incorporate new features  by extending the system, not by making
-modifications (to it)”, Uncle Bob.
+> modifications (to it)”,
+> Uncle Bob.
 
 Objects should be open for extension, but closed to modification. It should be
 possible to augment the functionality provided by an object (for example, a class)
@@ -1042,6 +1043,93 @@ FIXME: re-enable typechecking for the line above once it's clear how to use
 `typing.Protocol` to make the type checker work with Mixins.
 
 ### **Liskov Substitution Principle (LSP)**
+
+> “Functions that use pointers or references to base classes
+> must be able to use objects of derived classes without knowing it”,
+> Uncle Bob.
+
+This principle is named after Barbara Liskov, who collaborated with fellow
+computer scientist Jeannette Wing on the seminal paper
+*"A behavioral notion of subtyping" (1994). A core tenet of the paper is that
+"a subtype (must) preserve the behaviour of the supertype methods and also all
+invariant and history properties of its supertype".
+
+In essence, a function accepting a supertype should also accept all its subtypes
+with no modification.
+
+Can you spot the problem with the following code?
+
+**Bad**
+```python
+from dataclasses import dataclass
+
+
+@dataclass
+class Response:
+    """An HTTP response"""
+
+    status: int
+    content_type: str
+    body: str
+
+
+class View:
+    """A simple view that returns plain text responses"""
+
+    content_type = "text/plain"
+
+    def render_body(self) -> str:
+        """Render the message body of the response"""
+        return "Welcome to my web site"
+
+    def get(self, request) -> Response:
+        """Handle a GET request and return a message in the response"""
+        return Response(
+            status=200,
+            content_type=self.content_type,
+            body=self.render_body()
+        )
+
+
+class TemplateView(View):
+    """A view that returns HTML responses based on a template file."""
+
+    content_type = "text/html"
+
+    def get(self, request, template_file: str) -> Response: # type: ignore
+        """Render the message body as HTML"""
+        with open(template_file) as fd:
+            return Response(
+                status=200,
+                content_type=self.content_type,
+                body=fd.read()
+            )
+
+
+def render(view: View, request) -> Response:
+    """Render a View"""
+    return view.get(request)
+
+```
+
+The expectation is that `render()` function will be able to work with `View` and its
+subtype `TemplateView`, but the latter has broken compatibility by modifying
+the signature of the `.get()` method. The function will raise a `TypeError`
+exception when used with `TemplateView`.
+
+If we want the `render()` function to work with any subtype of `View`, we
+must pay attention not to break its public-facing protocol. But how do we know
+what constitutes it for a given class? Type hinters like *mypy* will raise
+an error when it detects mistakes like this:
+
+```
+error: Signature of "get" incompatible with supertype "View"
+<string>:36: note:      Superclass:
+<string>:36: note:          def get(self, request: Any) -> Response
+<string>:36: note:      Subclass:
+<string>:36: note:          def get(self, request: Any, template_file: str) -> Response
+```
+
 ### **Interface Segregation Principle (ISP)**
 ### **Dependency Inversion Principle (DIP)**
 
