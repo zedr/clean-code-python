@@ -1302,7 +1302,96 @@ def view(request):
 
 ### **Dependency Inversion Principle (DIP)**
 
-*Coming soon*
+> “Depend upon abstractions, not concrete details”,
+> Uncle Bob.
+
+Imagine we wanted to write a web view that returns an HTTP response that
+streams rows of a CSV file we create on the fly. We want to use the CSV writer
+that is provided by the standard library.
+
+**Bad**
+```python
+import csv
+from io import StringIO
+
+
+class StreamingHttpResponse:
+    """A streaming HTTP response"""
+    ... # implementation code goes here
+
+
+def some_view(request):
+   rows = (
+       ['First row', 'Foo', 'Bar', 'Baz'],
+       ['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"]
+   )
+   # Define a generator to stream data directly to the client
+   def stream():
+       buffer_ = StringIO()
+       writer = csv.writer(buffer_, delimiter=';', quotechar='"')
+       for row in rows:
+           writer.writerow(row)
+           buffer_.seek(0)
+           data = buffer_.read()
+           buffer_.seek(0)
+           buffer_.truncate()
+           yield data
+
+   # Create the streaming response  object with the appropriate CSV header.
+   response = StreamingHttpResponse(stream(), content_type='text/csv')
+   response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+
+   return response
+
+```
+
+Our first implementation works around the CSV's writer interface by manipulating
+a `StringIO` object (which is file-like) and performing several low level
+operations in order to farm out the rows from the writer. It's a lot of work
+and not very elegant.
+
+A better way is to leverage the fact that the writer just needs an object with
+a `.write()` method to do our bidding. Why not pass it a dummy object that
+immediately returns the newly assembled row, so that the `StreamingHttpResponse`
+class can immediate stream it back to the client?
+
+**Good**
+```python
+import csv
+
+
+class Echo:
+   """An object that implements just the write method of the file-like
+   interface.
+   """
+   def write(self, value):
+       """Write the value by returning it, instead of storing in a buffer."""
+       return value
+
+def some_streaming_csv_view(request):
+   """A view that streams a large CSV file."""
+   rows = (
+       ['First row', 'Foo', 'Bar', 'Baz'],
+       ['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"]
+   )
+   writer = csv.writer(Echo(), delimiter=';', quotechar='"')
+   return StreamingHttpResponse(
+       (writer.writerow(row) for row in rows),
+       content_type="text/csv",
+       headers={'Content-Disposition': 'attachment; filename="somefilename.csv"'},
+   )
+
+```
+
+Much better, and it works like a charm! The reason it's superior to the previous
+implementation should be obvious: less code (and more performant) to achieve
+the same result. We decided to leverage the fact that the writer class depends
+on the `.write()` abstraction of the object it receives, without caring about
+the low level, concrete details of what the method actually does.
+
+This example was taken from
+[a submission made to the Django documentation](https://code.djangoproject.com/ticket/21179)
+by this author.
 
 **[⬆ back to top](#table-of-contents)**
 
