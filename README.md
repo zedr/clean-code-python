@@ -7,7 +7,6 @@
   1. [Introduction](#introduction)
   2. [Variables](#variables)
   3. [Functions](#functions)
-  4. [Objects and Data Structures](#objects-and-data-structures)
   5. [Classes](#classes)
      1. [S: Single Responsibility Principle (SRP)](#single-responsibility-principle-srp)
      2. [O: Open/Closed Principle (OCP)](#openclosed-principle-ocp)
@@ -743,12 +742,6 @@ person = Person("Ryan McDermott")
 print(person.name)  # => "Ryan McDermott"
 print(person.name_as_first_and_last)  # => ["Ryan", "McDermott"]
 ```
-
-**[⬆ back to top](#table-of-contents)**
-
-## **Objects and Data Structures**
-
-*Coming soon*
 
 **[⬆ back to top](#table-of-contents)**
 
