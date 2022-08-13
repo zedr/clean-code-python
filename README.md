@@ -826,6 +826,125 @@ accepts a string.
 As an added bonus, the `get_version()` is now reusable elsewhere.
 
 ### **Open/Closed Principle (OCP)**
+
+> “Incorporate new features  by extending the system, not by making
+modifications (to it)”, Uncle Bob.
+
+Objects should be open for extension, but closed to modification. It should be
+possible to augment the functionality provided by an object (for example, a class)
+without changing its internal contracts. An object can enable this when it
+is designed to be extended cleanly.
+
+In the following example, we try to implement a simple web framework that
+handles HTTP requests and returns responses. The `View` class has a single
+method `.get()` that will be called when the HTTP server will receive a GET
+request from a client.
+
+`View` is intentionally simple and returns `text/plain` responses. We would
+also like to return HTML responses based on a template file, so we subclass it
+using the `TemplateView` class.
+
+**Bad**
+```python
+from dataclasses import dataclass
+
+
+@dataclass
+class Response:
+    """An HTTP response"""
+
+    status: int
+    content_type: str
+    body: str
+
+
+class View:
+    """A simple view that returns plain text responses"""
+
+    def get(self, request) -> Response:
+        """Handle a GET request and return a message in the response"""
+        return Response(
+            status=200,
+            content_type='text/plain',
+            body="Welcome to my web site"
+        )
+
+
+class TemplateView(View):
+    """A view that returns HTML responses based on a template file."""
+
+    def get(self, request) -> Response:
+        """Handle a GET request and return an HTML document in the response"""
+        with open("index.html") as fd:
+            return Response(
+                status=200,
+                content_type='text/html',
+                body=fd.read()
+            )
+
+```
+
+The `TemplateView` class has modified the internal behaviour of its parent
+class in order to enable the more advanced functionality. In doing so,
+it now relies on the `View` to not change the implementation of the `.get()`
+method, which now needs to be frozen in time. We cannot introduce, for example,
+some additional checks in all our `View`-derived classes because the behaviour
+is overridden in at least one subtype and we will need to update it.
+
+Let's redesign our classes to fix this problem and let the `View` class be
+extended (not modified) cleanly:
+
+**Good**
+```python
+from dataclasses import dataclass
+
+
+@dataclass
+class Response:
+    """An HTTP response"""
+
+    status: int
+    content_type: str
+    body: str
+
+
+class View:
+    """A simple view that returns plain text responses"""
+
+    content_type = "text/plain"
+
+    def render_body(self) -> str:
+        """Render the message body of the response"""
+        return "Welcome to my web site"
+
+    def get(self, request) -> Response:
+        """Handle a GET request and return a message in the response"""
+        return Response(
+            status=200,
+            content_type=self.content_type,
+            body=self.render_body()
+        )
+
+
+class TemplateView(View):
+    """A view that returns HTML responses based on a template file."""
+
+    content_type = "text/html"
+    template_file = "index.html"
+
+    def render_body(self) -> str:
+        """Render the message body as HTML"""
+        with open("index.html") as fd:
+            return fd.read()
+
+
+```
+
+Note that we did need to override the `render_body()` in order to change the
+source of the body, but this method has a single, well defined responsibility
+that **invites subtypes to override it**. It is designed to be extended by its
+subtypes.
+
 ### **Liskov Substitution Principle (LSP)**
 ### **Interface Segregation Principle (ISP)**
 ### **Dependency Inversion Principle (DIP)**
