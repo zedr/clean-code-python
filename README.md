@@ -1534,8 +1534,8 @@ company_managers_list = get_employee_list(employees=company_managers)
 
 This document is also available in other languages:
 
-- :zh: **Chinese** [yinruiqing/clean-code-python](https://github.com/yinruiqing/clean-code-python)
-- :pt: :br: **Portugese** [fredsonchaves07/clean-code-python](https://github.com/fredsonchaves07/clean-code-python)
-- :iran: **Persian:** [SepehrRasouli/clean-code-python](https://github.com/SepehrRasouli/clean-code-python)
+- **Chinese** [yinruiqing/clean-code-python](https://github.com/yinruiqing/clean-code-python)
+- 🇵🇹 🇧🇷 **Portugese** [fredsonchaves07/clean-code-python](https://github.com/fredsonchaves07/clean-code-python)
+- 🇮🇷 **Persian:** [SepehrRasouli/clean-code-python](https://github.com/SepehrRasouli/clean-code-python)
 
 **[⬆ back to top](#table-of-contents)**
