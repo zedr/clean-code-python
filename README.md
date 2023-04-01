@@ -1281,7 +1281,7 @@ class PDFDocument(Loadable):
         ... # Code goes here - omitted for brevity
 
     @classmethod
-    def load(cls, name: str):
+    def load(cls, name: str) -> None:
         """Load the file from the local filesystem"""
         ... # Code goes here - omitted for brevity
 

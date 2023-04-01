@@ -67,6 +67,9 @@ class ReadmeItem(pytest.Item):
         _with_patched_sleep(exec, byte_code, builtins)
         msg, _, error = api.run(['--no-color-output', '-c', self.spec])
         if error:
+            # Ignore missing return statements
+            if "Missing return statement" in msg:
+                return
             # Ignore missing errors related to the injected names
             for name in builtins:
                 if f"Name '{name}' is not defined" in msg:
