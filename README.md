@@ -30,7 +30,7 @@ universally agreed upon. These are guidelines and nothing more, but they are
 ones codified over many years of collective experience by the authors of *Clean
 Code*.
 
-Inspired
+Adapted
 from [clean-code-javascript](https://github.com/ryanmcdermott/clean-code-javascript)
 
 Targets Python3.7+
