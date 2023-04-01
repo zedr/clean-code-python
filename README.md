@@ -380,7 +380,11 @@ If the function has a single responsibility, consider if you can bundle
 some or all parameters into a specialized object that will be passed as an 
 argument to the function. These parameters might be attributes of a single
 entity that you can represent with a dedicated data structure. You may also
-be able to reuse this entity elsewhere in your program.
+be able to reuse this entity elsewhere in your program. The reason why this is
+a better arrangement is than having multiple parameters is that we may be able
+to move some computations, done with those parameters inside the 
+function, into methods belonging to the new object, therefore reducing the
+complexity of the function.
 
 **Bad:**
 
