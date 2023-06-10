@@ -1602,6 +1602,7 @@ This document is also available in other languages:
 
 - 🇨🇳 **
   Chinese** [yinruiqing/clean-code-python](https://github.com/yinruiqing/clean-code-python)
+- 🇰🇷 ** Korean ** [wooy0ng/clean-code-python](https://github.com/wooy0ng/clean-code-python)
 - 🇵🇹 🇧🇷 **
   Portugese** [fredsonchaves07/clean-code-python](https://github.com/fredsonchaves07/clean-code-python)
 - 🇮🇷 **
